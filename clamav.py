@@ -232,6 +232,7 @@ def scan_file(path):
         print(msg)
         raise Exception(msg)
 
+
 def is_clamd_running():
     print("Checking if clamd is running on %s" % CLAMD_SOCKET)
 
@@ -251,6 +252,7 @@ def is_clamd_running():
 
     print("Clamd is not running on %s" % CLAMD_SOCKET)
     return False
+
 
 def start_clamd_daemon():
     s3 = boto3.resource("s3")

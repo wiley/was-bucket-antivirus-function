@@ -24,8 +24,6 @@ import boto3
 
 import clamav
 import metrics
-from common import AV_DEFINITION_S3_BUCKET
-from common import AV_DEFINITION_S3_PREFIX
 from common import AV_DELETE_INFECTED_FILES
 from common import AV_PROCESS_ORIGINAL_VERSION_ONLY
 from common import AV_SCAN_START_METADATA
@@ -43,6 +41,7 @@ from common import get_timestamp
 
 
 clamd_pid = None
+
 
 def event_object(event, event_source="s3"):
 

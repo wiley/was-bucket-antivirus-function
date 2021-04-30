@@ -27,7 +27,6 @@ import shutil
 
 
 def lambda_handler(event, context):
-    s3 = boto3.resource("s3")
     s3_client = boto3.client("s3")
 
     print("Script starting at %s\n" % (get_timestamp()))
@@ -38,7 +37,7 @@ def lambda_handler(event, context):
         for d in dirs:
             shutil.rmtree(os.path.join(root, d))
 
-    to_download = clamav.update_defs_from_s3(
+    clamav.update_defs_from_s3(
         s3_client, AV_DEFINITION_S3_BUCKET, AV_DEFINITION_S3_PREFIX
     )
 
