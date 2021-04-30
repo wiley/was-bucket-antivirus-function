@@ -237,6 +237,10 @@ def lambda_handler(event, context):
     print("Script starting at %s\n" % (start_time))
     s3_object = event_object(event, event_source=EVENT_SOURCE)
 
+    print(
+        "Scanning s3://%s ...\n" % (os.path.join(s3_object.bucket_name, s3_object.key))
+    )
+
     if str_to_bool(AV_PROCESS_ORIGINAL_VERSION_ONLY):
         verify_s3_object_version(s3, s3_object)
 
