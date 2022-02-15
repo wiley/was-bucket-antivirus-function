@@ -61,6 +61,7 @@ RUN echo "PidFile /tmp/clamd.pid" >> /opt/app/bin/scan.conf
 RUN echo "LogFile /tmp/clamd.log" >> /opt/app/bin/scan.conf
 RUN echo "LocalSocket /tmp/clamd.sock" >> /opt/app/bin/scan.conf
 RUN echo "FixStaleSocket yes" >> /opt/app/bin/scan.conf
+RUN echo "MaxScanSize 1024M" >> /opt/app/bin/scan.conf
 
 # Fix the freshclam.conf settings
 RUN echo "DatabaseMirror database.clamav.net" > /opt/app/bin/freshclam.conf
@@ -71,6 +72,8 @@ WORKDIR /opt/app
 RUN zip -r9 --exclude="*test*" /opt/app/build/lambda.zip *.py bin
 
 WORKDIR /usr/local/lib/python3.7/site-packages
+RUN zip -r9 /opt/app/build/lambda.zip *
+WORKDIR /usr/local/lib64/python3.7/site-packages
 RUN zip -r9 /opt/app/build/lambda.zip *
 
 WORKDIR /opt/app

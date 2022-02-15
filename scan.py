@@ -17,6 +17,7 @@ import copy
 import json
 import os
 import signal
+import psutil
 from urllib.parse import unquote_plus
 from distutils.util import strtobool
 
@@ -37,7 +38,6 @@ from common import AV_STATUS_SNS_PUBLISH_CLEAN
 from common import AV_STATUS_SNS_PUBLISH_INFECTED
 from common import AV_TIMESTAMP_METADATA
 from common import AV_EFS_MOUNT_POINT
-from common import AV_EFS_LARGE_FILE_SIZE_THRESHOLD
 from common import create_dir
 from common import get_timestamp
 
@@ -103,11 +103,15 @@ def verify_s3_object_version(s3, s3_object):
 
 
 def get_local_path(s3_object):
+    # leave padding of 2 sizes of a file to support scanning archives (clamav would unarchive before scan)
+    free_bytes = psutil.disk_usage(DEFAULT_SCAN_DIR).free
+    efs_threshold = free_bytes - (3 * s3_object.content_length)
+
     return get_local_path_internal(
         s3_object,
         DEFAULT_SCAN_DIR,
         AV_EFS_MOUNT_POINT,
-        int(AV_EFS_LARGE_FILE_SIZE_THRESHOLD),
+        efs_threshold,
     )
 
 
@@ -295,16 +299,16 @@ def lambda_handler(event, context):
         metrics.send(
             env=ENV, bucket=s3_object.bucket_name, key=s3_object.key, status=scan_result
         )
+        if str_to_bool(AV_DELETE_INFECTED_FILES) and scan_result == AV_STATUS_INFECTED:
+            delete_s3_object(s3_object)
+        stop_scan_time = get_timestamp()
+        print("Script finished at %s\n" % stop_scan_time)
     finally:
         # Delete downloaded file to free up room on re-usable lambda function container
         try:
             os.remove(file_path)
         except OSError:
             pass
-    if str_to_bool(AV_DELETE_INFECTED_FILES) and scan_result == AV_STATUS_INFECTED:
-        delete_s3_object(s3_object)
-    stop_scan_time = get_timestamp()
-    print("Script finished at %s\n" % stop_scan_time)
 
 
 def str_to_bool(s):
