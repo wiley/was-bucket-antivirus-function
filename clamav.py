@@ -239,9 +239,9 @@ def is_clamd_running():
     if os.path.exists(CLAMD_SOCKET):
         with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
             s.settimeout(10)
-            s.connect(CLAMD_SOCKET)
-            s.send(b"PING")
             try:
+                s.connect(CLAMD_SOCKET)
+                s.send(b"PING")
                 data = s.recv(32)
             except (socket.timeout, socket.error) as e:
                 print("Failed to read from socket: %s\n" % e)
