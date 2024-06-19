@@ -1,0 +1,20 @@
+name: Main Pipeline
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master  #default branch name
+    tags-ignore:
+      - '**'
+  pull_request:
+    branches:
+      - master #default branch name
+
+jobs:
+  main:
+    secrets: inherit
+    uses: wiley/github-workflows/.github/workflows/PIPELINE-Serverless.yaml@main
+    with:
+      APP_CODE: "was-bucket-antivirus-function"
+      SYS_CODE: "was"
+      PYTHON_VERSION: "3.8"
