@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "serverless-api-gateway-caching": "^1.10.4",
+    "serverless-bundle": "^6.1.0",
+    "serverless-dotenv-plugin": "^6.0.0",
+    "serverless-export-env": "^2.2.0",
+    "serverless-offline": "^13.6.0",
+    "serverless-scriptable-plugin": "^1.3.1"
+  }
+}

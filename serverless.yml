@@ -1,0 +1,49 @@
+org: heshantest
+app: was-bucket-antivirus-function
+service: was-bucket-antivirus-function
+
+frameworkVersion: '3'
+useDotenv: true
+configValidationMode: error
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:GetObject
+        - s3:PutObject
+      Resource: "arn:aws:s3:::*"
+  tags:
+    sysCode: wasantivirusbucket
+    sysId: fab7d3d8-4542-4dac-83a6-01f4cf38d2c6
+    appCode: was-bucket-antivirus-function
+    appId: 54107e9c-af16-4adb-8984-6f90c274ccff
+    functional_area: technology-lanka
+    managedBy: serverless
+    infraOwner: SRE
+  iam:
+    role: arn:aws:iam::868651433674:role/antivirus-function-role-was-attachment
+  environment:
+    AV_DEFINITION_S3_BUCKET: was-s3-av-qa
+    AV_DEFINITION_S3_PREFIX: clamav_defs
+    AV_DELETE_INFECTED_FILES: False
+    AV_STATUS_SNS_ARN: arn:aws:sns:us-east-1:868651433674:sns-av-topic-qa
+    AV_STATUS_SNS_PUBLISH_CLEAN: True
+    AV_STATUS_SNS_PUBLISH_INFECTED: True
+
+plugins:
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+functions:
+  antivirusScanner:
+    handler: scan.lambda_handler
+    timeout: 300
+    memorySize: 3500
+    events:
+      - s3:
+          bucket: was-s3-av-qa
+          event: s3:ObjectCreated:*
