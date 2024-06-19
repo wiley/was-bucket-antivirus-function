@@ -1,0 +1,15 @@
+--- !<Application>
+id: "54107e9c-af16-4adb-8984-6f90c274ccff"
+modelType: "Application"
+appCode: "was-bucket-antivirus-function"
+atlasId: ""
+name: "WAS uploader application"
+appType: "Built"
+description: "bucket antivirus function for WAS"
+state: "InDevelopment"
+documentationUrl: "https://confluence.wiley.com/x/Ier3Dg"
+issueTrackerUrl: "https://jira.wiley.com/projects/NG/issues/"
+hostedBy: "aws"
+systemId: "fab7d3d8-4542-4dac-83a6-01f4cf38d2c6"
+shortCode: "wasantivirusbucket"
+isSystem: false
